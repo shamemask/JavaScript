@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app" :title="message+'\n'+status">
+        {{message}}
+        <h1 v-if="status" title="">Истина</h1>
+        <h1 v-else>ложь</h1>
+        <template v-if="status ">
+            <h1>Заголовок1</h1>
+            <p>описание1</p>
+        </template>
+        <template v-else>
+            <h1>Заголовок2</h1>
+            <p>описание2</p>
+        </template>
+        <h1 v-show="status">Header V-show</h1>
+        <div :class="{active: isActive, 'btn-default': isBtn}"></div>
+        <div :class="[isActive? 'active': 'disabled', 'default']"></div>
+        <h1 :style="{color:'red',width: width+'px'}">test</h1>
+    </div>
+    <p></p>
+    <div id="vue">
+        <h3>{{textSearch}} {length: {{textSearch.length}}}</h3>
+        <input type="text" size="50" v-model="textSearch" name="" value="">
+        <ul>
+            <li v-for="(item, index) in list">index {{index}}: {{item}}</li>
+        </ul>
+        <ul>
+            <li v-for="user in users">{{user.id}}: {{user.name}}</li>
+        </ul>
+
+        <table border="1" @click="nameFunction2">
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+            </thead>
+            <tbody>
+                <tr v-for="user in users">
+                    <td>{{user.id}}</td>
+                    <td>{{user.name}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button @click="high">Counter equal: {{counter}} </button>
+<p></p>
+        <button type="button" @click="getHashtags">Load</button>
+
+        <ul>
+            <li v-for="Hashtag in hashtags">{{Hashtag}}</li>
+        </ul>
+        <button type="button" @click="getCities">Load</button>
+        <p></p>
+        <ul>
+            <li v-for="city in cities">
+                {{city.region}}: {{city.city}}
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!',
+                status: 1,
+                isActive: false,
+                isBtn: true,
+                width: 15,
+                
+            }
+        })
+        var app = new Vue({
+            el: '#vue',
+            
+            data:{
+                list: ['one','two','three'],
+                users:[
+                    { id: 1, name: 'Ivan'},
+                    { id: 2, name: 'Sergey'},
+                ],
+                counter: 1,
+                hashtags:[],
+                cities: [],
+                textSearch: '',
+                url:{
+                    hashtags: 'https://dka-develop.ru/api?type=hashtag',
+                    cities: 'https://dka-develop.ru/api?type=city'
+                }
+            },
+            watch:{
+                textSearch: function(){
+                    if(this.textSearch.length > 3){
+                        this.textSearch = 'Change code field'
+                    }
+                }
+            },
+            created: function(){
+                console.log(this.url.hashtags);
+            },
+            created: function(){
+                this.list
+            },
+            created: function(){
+                this.counter = 3;
+                this.high();
+            },
+            methods:{
+                getHashtags(){
+                    axios.get(this.url.hashtags).then((response) =>{
+                        console.log(response.data);
+                        this.hashtags = response.data;
+                    });
+                },
+                getCities(){
+                    axios.get(this.url.cities).then((response) =>{
+                        console.log(response.data);
+                        this.cities = response.data;
+                    });
+                },
+                high(){
+                    this.counter++;
+                },
+                nameFunction(){
+                    alert('nameFunction');
+                },
+                nameFunction2: function(){
+                    alert('nameFunction2');
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
